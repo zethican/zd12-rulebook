@@ -20,7 +20,7 @@
   
   /* Typography */
   --font-heading: 'Playwrite DE Grund', cursive;
-  --font-body: 'Winky Rough', sans-serif;
+  --font-body: 'Instrument Serif', sans-serif;
   --font-serif: 'Instrument Serif', serif;
   
   /* Sizes */
@@ -86,18 +86,18 @@
   margin: var(--page-margin-top) var(--page-margin-right) var(--page-margin-bottom) var(--page-margin-left);
   
   @top-center {
-    content: "ZD12 Core Rulebook v2.8";
+    content: "ZD12RPG";
     font-family: var(--font-serif);
     font-size: var(--size-header-footer);
     color: var(--color-text-light);
   }
   
-  @bottom-center {
+ /* @bottom-center {
     content: counter(page);
     font-family: var(--font-serif);
     font-size: var(--size-header-footer);
     color: var(--color-text-light);
-  }
+  } */
 }
 
 @page :first {
