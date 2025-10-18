@@ -1,7 +1,7 @@
 /* ========================================
-   ZD12 CORE RULEBOOK - STYLESHEET v3.1
-   OPTIMIZED FOR STABLE PAGE LAYOUT
-   Key improvements for reducing cascading breaks
+   ZD12 CORE RULEBOOK - STYLESHEET v3.0
+   Merged: Base Styles + Print Optimization
+   For WeasyPrint PDF Generation
    ======================================== */
 
 /* ROOT VARIABLES - Easy theme switching */
@@ -41,17 +41,12 @@
   --spacing-xl: 0.15in;
   --spacing-xxl: 0.2in;
   
-  /* Page Settings - FIXED for predictability */
-  --page-width: 8.5in;
-  --page-height: 11in;
+  /* Page Settings - Booklet optimized */
+  --page-width: letter;
   --page-margin-top: 0.5in;
   --page-margin-right: 0.35in;
   --page-margin-bottom: 0.5in;
   --page-margin-left: 0.35in;
-  
-  /* Calculated content area (use for max-height calculations) */
-  --content-width: 7.8in;  /* 8.5 - 0.7 */
-  --content-height: 10in;   /* 11 - 1.0 */
 }
 
 /* ========================================
@@ -84,14 +79,11 @@
 
 /* ========================================
    PAGE RULES & RUNNING HEADERS
-   FIX #1: Explicit page dimensions for stability
    ======================================== */
 
 @page {
-  size: letter; /* Explicit: 8.5in x 11in */
+  size: var(--page-width);
   margin: var(--page-margin-top) var(--page-margin-right) var(--page-margin-bottom) var(--page-margin-left);
-  
-  /* This creates a predictable 7.8in x 10in content box */
 }
 
 /* Capture chapter header from h2 */
@@ -190,7 +182,6 @@ body {
 
 /* ========================================
    HEADINGS - AGGRESSIVE PAGE BREAK CONTROL
-   FIX #2: More predictable heading behavior
    ======================================== */
 
 h1, h2, h3, h4, h5, h6 {
@@ -250,11 +241,6 @@ h5, h6 {
   page-break-after: avoid;
 }
 
-/* FIX #3: Keep headings with following content more aggressively */
-h2, h3, h4 {
-  keep-with-next: always; /* WeasyPrint specific */
-}
-
 /* Prevent orphaned headings */
 * + h1 { margin-top: max(var(--spacing-xl), 0.2in); }
 * + h2 { margin-top: max(var(--spacing-lg), 0.12in); }
@@ -262,15 +248,13 @@ h2, h3, h4 {
 
 /* ========================================
    INLINE TEXT ELEMENTS
-   FIX #4: Reduced paragraph breaking
    ======================================== */
 
 p {
   margin-bottom: var(--spacing-md);
   orphans: 3;
   widows: 3;
-  /* CHANGED: Allow paragraph breaking in long sections */
-  /* Only use break-inside: avoid on specific paragraphs */
+  break-inside: avoid;
 }
 
 /* Reduce space between consecutive paragraphs */
@@ -303,31 +287,22 @@ a:hover {
 
 /* ========================================
    LISTS - TIGHTENED
-   FIX #5: Smart list breaking
    ======================================== */
 
 ul, ol {
   margin: var(--spacing-md) 0 var(--spacing-md) 1.2em;
   padding-left: 0;
-  /* CHANGED: Remove page-break-inside: avoid on lists */
-  /* This allows long lists to split across pages naturally */
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
-/* But keep list items together */
 li {
   margin-bottom: var(--spacing-sm);
   line-height: 1.35;
-  page-break-inside: avoid; /* Individual items stay together */
 }
 
 li + li {
   page-break-before: avoid;
-}
-
-/* Short lists (3 or fewer items) should stay together */
-ul:has(li:nth-child(-n+3):last-child),
-ol:has(li:nth-child(-n+3):last-child) {
-  page-break-inside: avoid;
 }
 
 /* ========================================
@@ -366,7 +341,6 @@ blockquote {
 
 /* ========================================
    TABLES - ABSOLUTE NO-BREAK RULE
-   FIX #6: Better table handling
    ======================================== */
 
 table {
@@ -379,24 +353,11 @@ table {
   background-color: var(--color-bg);
 }
 
-/* IMPORTANT: For very large tables, use .table-allow-break class */
-table.table-allow-break {
-  page-break-inside: auto;
-}
-
-table.table-allow-break tbody {
-  page-break-inside: auto;
-}
-
-table.table-allow-break tr {
-  page-break-inside: avoid; /* Still keep rows together */
-}
-
 thead {
   background-color: var(--color-primary);
   color: var(--color-bg);
   font-weight: bold;
-  display: table-header-group; /* Repeats on each page */
+  display: table-header-group;
 }
 
 th {
@@ -479,7 +440,6 @@ p:has(strong:only-child) {
 
 /* ========================================
    HELPER CLASSES FOR PAGE CONTROL
-   FIX #7: New utility classes for better control
    ======================================== */
 
 /* Page Breaks */
@@ -494,12 +454,6 @@ p:has(strong:only-child) {
 
 .page-break-after {
   page-break-after: always;
-}
-
-/* NEW: Soft page break (prefer to break here) */
-.page-break-soft {
-  page-break-before: auto;
-  margin-top: var(--spacing-xxl);
 }
 
 /* Keep Content Together */
@@ -518,13 +472,6 @@ p:has(strong:only-child) {
 
 .keep-with-next {
   margin-bottom: 0;
-  page-break-after: avoid;
-}
-
-/* NEW: Allow breaking (for overriding defaults) */
-.allow-break {
-  page-break-inside: auto;
-  break-inside: auto;
 }
 
 /* Content Boxes - Never Break */
@@ -580,11 +527,6 @@ p:has(strong:only-child) {
 .new-page {
   page-break-before: always;
 }
-
-/* NEW: Strategic spacing controls */
-.spacer-small { margin-top: var(--spacing-md); }
-.spacer-medium { margin-top: var(--spacing-lg); }
-.spacer-large { margin-top: var(--spacing-xl); }
 
 /* ========================================
    PRINT MEDIA OPTIMIZATION
