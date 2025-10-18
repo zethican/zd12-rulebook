@@ -1,4 +1,31 @@
 /* ========================================
+   BOOKLET LAYOUT PRESET
+   Uncomment this block for 5.5" x 8.5" booklet
+   ======================================== */
+/*
+:root {
+  --page-width: 5.5in;
+  --page-height: 8.5in;
+  --page-margin-top: 0.4in;
+  --page-margin-right: 0.3in;
+  --page-margin-bottom: 0.4in;
+  --page-margin-left: 0.3in;
+  
+  --content-width: 4.9in;   /* 5.5 - 0.6 */
+  --content-height: 7.7in;  /* 8.5 - 0.8 */
+  
+  /* Slightly smaller fonts for booklet */
+  --size-h1: 20pt;
+  --size-h2: 16pt;
+  --size-h3: 13pt;
+  --size-h4: 11pt;
+  --size-body: 9.5pt;
+  --size-table: 8.5pt;
+  --size-code: 8.5pt;
+  --size-header-footer: 8pt;
+}
+*/
+/* ========================================
    ZD12 CORE RULEBOOK - STYLESHEET v3.1
    OPTIMIZED FOR STABLE PAGE LAYOUT
    Key improvements for reducing cascading breaks
@@ -6,6 +33,7 @@
 
 /* ROOT VARIABLES - Easy theme switching */
 :root {
+  
   /* Color Palette */
   --color-primary: #8C00FF;      /* Purple */
   --color-accent: #FFC400;       /* Gold */
@@ -58,17 +86,11 @@
    FONT DECLARATIONS
    ======================================== */
 
-@font-face {
-  font-family: 'Playwrite DE Grund';
-  src: url('../fonts/Playwrite DE Grund Guides.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+
 
 @font-face {
-  font-family: 'Winky Rough';
-  src: url('../fonts/Winky_Rough.ttf') format('truetype');
+  font-family: 'Instrument Serif';
+  src: url('../fonts/Instrument_Serif.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -77,6 +99,14 @@
 @font-face {
   font-family: 'Instrument Serif';
   src: url('../fonts/Instrument_Serif.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playwrite DE Grund';
+  src: url('../fonts/Playwrite DE Grund.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
