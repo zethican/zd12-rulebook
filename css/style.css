@@ -1,0 +1,588 @@
+/* ========================================
+   ZD12 CORE RULEBOOK - STYLESHEET v3.0
+   Merged: Base Styles + Print Optimization
+   For WeasyPrint PDF Generation
+   ======================================== */
+
+/* ROOT VARIABLES - Easy theme switching */
+:root {
+  /* Color Palette */
+  --color-primary: #8C00FF;      /* Purple */
+  --color-accent: #FFC400;       /* Gold */
+  --color-text: #000000;
+  --color-text-light: #333333;   /* Dark gray */
+  --color-bg: #FFFFFF;
+  --color-bg-light: #f5f5f5;
+  --color-bg-row: #f9f9f9;
+  --color-bg-label: #FFF5E6;
+  --color-border: #dddddd;
+  --color-border-dark: #8C00FF;
+  
+  /* Typography */
+  --font-heading: 'Playwrite DE Grund', cursive;
+  --font-body: 'Winky Rough', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+  
+  /* Sizes */
+  --size-h1: 24pt;
+  --size-h2: 18pt;
+  --size-h3: 14.5pt;
+  --size-h4: 12pt;
+  --size-body: 10.5pt;
+  --size-table: 9pt;
+  --size-code: 9pt;
+  --size-header-footer: 9pt;
+  
+  /* Spacing - Print-optimized */
+  --spacing-xs: 0.1in;
+  --spacing-sm: 0.05in;
+  --spacing-md: 0.08in;
+  --spacing-lg: 0.1in;
+  --spacing-xl: 0.15in;
+  --spacing-xxl: 0.2in;
+  
+  /* Page Settings - Booklet optimized */
+  --page-width: letter;
+  --page-margin-top: 0.5in;
+  --page-margin-right: 0.35in;
+  --page-margin-bottom: 0.5in;
+  --page-margin-left: 0.35in;
+}
+
+/* ========================================
+   FONT DECLARATIONS
+   ======================================== */
+
+@font-face {
+  font-family: 'Playwrite DE Grund';
+  src: url('../fonts/Playwrite DE Grund Guides.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Winky Rough';
+  src: url('../fonts/Winky_Rough.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('../fonts/Instrument_Serif.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ========================================
+   PAGE RULES & RUNNING HEADERS
+   ======================================== */
+
+@page {
+  size: var(--page-width);
+  margin: var(--page-margin-top) var(--page-margin-right) var(--page-margin-bottom) var(--page-margin-left);
+}
+
+/* Capture chapter header from h2 */
+h2 {
+  string-set: chapter-header content(text);
+  string-set: section-header "";
+}
+
+/* Capture section headers from h3, h4, h5 */
+h3, h4, h5 {
+  string-set: section-header content(text);
+}
+
+/* Part/Major section breaks force LEFT-PAGE starts */
+h1 {
+  page-break-before: left;
+}
+
+h1:first-of-type {
+  page-break-before: avoid;
+}
+
+/* LEFT PAGES: Chapter on top-left, page number on outer edge */
+@page :left {
+  @top-left {
+    content: string(chapter-header);
+    font-family: var(--font-serif);
+    font-size: var(--size-header-footer);
+    color: var(--color-text-light);
+    text-align: left;
+  }
+
+  @bottom-left {
+    content: counter(page);
+    font-family: var(--font-serif);
+    font-size: var(--size-header-footer);
+    color: var(--color-text-light);
+    text-align: left;
+  }
+
+  @top-right { content: none; }
+  @bottom-right { content: none; }
+}
+
+/* RIGHT PAGES: Section on top-right, page number on outer edge */
+@page :right {
+  @top-right {
+    content: string(section-header);
+    font-family: var(--font-serif);
+    font-size: var(--size-header-footer);
+    color: var(--color-text-light);
+    text-align: right;
+  }
+
+  @bottom-right {
+    content: counter(page);
+    font-family: var(--font-serif);
+    font-size: var(--size-header-footer);
+    color: var(--color-text-light);
+    text-align: right;
+  }
+
+  @top-left { content: none; }
+  @bottom-left { content: none; }
+}
+
+/* FIRST PAGE: No headers/footers */
+@page :first {
+  @top-left { content: none; }
+  @top-right { content: none; }
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--size-body);
+  line-height: 1.4;
+  color: var(--color-text);
+  background: var(--color-bg);
+  hyphens: auto;
+  text-align: justify;
+  orphans: 3;
+  widows: 3;
+}
+
+/* ========================================
+   HEADINGS - AGGRESSIVE PAGE BREAK CONTROL
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-text);
+  font-weight: normal;
+  page-break-after: avoid;
+  line-height: 1.3;
+  font-kerning: auto;
+  text-rendering: geometricPrecision;
+  orphans: 1;
+  widows: 1;
+}
+
+h1 {
+  font-size: var(--size-h1);
+  color: var(--color-primary);
+  border-bottom: 3px solid var(--color-accent);
+  padding-bottom: var(--spacing-xs);
+  margin: 0 0 var(--spacing-lg) 0;
+  margin-top: var(--spacing-xl);
+  page-break-before: always;
+}
+
+h1:first-of-type {
+  page-break-before: avoid;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: var(--size-h2);
+  color: var(--color-primary);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+  page-break-after: avoid;
+  page-break-before: avoid;
+}
+
+h3 {
+  font-size: var(--size-h3);
+  color: var(--color-text);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
+  page-break-after: avoid;
+  page-break-before: avoid;
+}
+
+h4 {
+  font-size: var(--size-h4);
+  font-weight: bold;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+  page-break-after: avoid;
+}
+
+h5, h6 {
+  page-break-after: avoid;
+}
+
+/* Prevent orphaned headings */
+* + h1 { margin-top: max(var(--spacing-xl), 0.2in); }
+* + h2 { margin-top: max(var(--spacing-lg), 0.12in); }
+* + h3 { margin-top: max(var(--spacing-lg), 0.1in); }
+
+/* ========================================
+   INLINE TEXT ELEMENTS
+   ======================================== */
+
+p {
+  margin-bottom: var(--spacing-md);
+  orphans: 3;
+  widows: 3;
+  break-inside: avoid;
+}
+
+/* Reduce space between consecutive paragraphs */
+p + p {
+  margin-top: -0.03in;
+}
+
+strong, b {
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+em, i {
+  font-style: italic;
+}
+
+sup {
+  font-size: 8pt;
+  color: var(--color-primary);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ========================================
+   LISTS - TIGHTENED
+   ======================================== */
+
+ul, ol {
+  margin: var(--spacing-md) 0 var(--spacing-md) 1.2em;
+  padding-left: 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+li {
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.35;
+}
+
+li + li {
+  page-break-before: avoid;
+}
+
+/* ========================================
+   CODE & BLOCK ELEMENTS
+   ======================================== */
+
+code, pre, .example, blockquote {
+  font-family: var(--font-serif);
+  background-color: var(--color-bg-light);
+  border-left: 3px solid var(--color-accent);
+  padding: var(--spacing-lg) var(--spacing-lg);
+  margin: var(--spacing-md) 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  font-size: var(--size-code);
+  line-height: 1.3;
+}
+
+code {
+  background-color: #f0f0f0;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  border-left: none;
+  display: inline;
+}
+
+pre {
+  display: block;
+  overflow-x: auto;
+}
+
+blockquote {
+  font-style: italic;
+  color: #333;
+}
+
+/* ========================================
+   TABLES - ABSOLUTE NO-BREAK RULE
+   ======================================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-md) 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  font-size: var(--size-table);
+  background-color: var(--color-bg);
+}
+
+thead {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  font-weight: bold;
+  display: table-header-group;
+}
+
+th {
+  padding: 0.08in 0.1in;
+  text-align: center;
+  border: 1px solid var(--color-border-dark);
+  font-family: var(--font-heading);
+  font-size: 9.5pt;
+  min-width: 3em;
+  word-spacing: 0.05em;
+}
+
+td {
+  padding: 0.08in 0.1in;
+  text-align: center;
+  border: 1px solid var(--color-border);
+  vertical-align: top;
+  min-width: 2.5em;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  hyphens: none;
+  white-space: normal;
+  line-height: 1.3;
+}
+
+tbody {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+tbody tr:nth-child(even) {
+  background-color: var(--color-bg-row);
+}
+
+tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+td:first-child {
+  font-weight: bold;
+  background-color: var(--color-bg-label);
+}
+
+/* Ensure tables don't orphan from headers */
+h3 + table, h4 + table {
+  page-break-before: avoid;
+}
+
+/* ========================================
+   HORIZONTAL RULES & SEPARATORS
+   ======================================== */
+
+hr {
+  border: none;
+  border-top: 2px solid var(--color-accent);
+  margin: var(--spacing-xl) 0;
+  page-break-after: avoid;
+}
+
+/* ========================================
+   SPECIAL SECTIONS
+   ======================================== */
+
+#table-of-contents {
+  page-break-after: always;
+  page-break-inside: avoid;
+}
+
+p:has(strong:only-child) {
+  text-align: center;
+  margin-top: var(--spacing-xxl);
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+/* ========================================
+   HELPER CLASSES FOR PAGE CONTROL
+   ======================================== */
+
+/* Page Breaks */
+.page-break {
+  page-break-before: always;
+  page-break-after: avoid;
+}
+
+.page-break-before {
+  page-break-before: always;
+}
+
+.page-break-after {
+  page-break-after: always;
+}
+
+/* Keep Content Together */
+.no-break {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.no-break-before {
+  page-break-before: avoid;
+}
+
+.no-break-after {
+  page-break-after: avoid;
+}
+
+.keep-with-next {
+  margin-bottom: 0;
+}
+
+/* Content Boxes - Never Break */
+.box, .stat-block, .sidebar, .rules-box, .stats, .abilities, .rules-block {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin: var(--spacing-md) 0;
+  padding: var(--spacing-lg) var(--spacing-lg);
+  border-left: 3px solid var(--color-primary);
+  background-color: #f9f9f9;
+}
+
+/* Section Grouping */
+.section-block,
+[data-section],
+.group,
+.related {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* For small content that should never orphan */
+.keep-tight {
+  page-break-inside: avoid;
+  orphans: 5;
+  widows: 5;
+}
+
+/* Decorative Separators */
+.separator {
+  border: none;
+  border-top: 1px solid var(--color-primary);
+  margin: var(--spacing-md) 0;
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+
+.separator-thick {
+  border: none;
+  border-top: 2px solid var(--color-primary);
+  margin: var(--spacing-xl) 0;
+  page-break-after: avoid;
+}
+
+.section-break {
+  margin: var(--spacing-xl) 0;
+  page-break-after: avoid;
+  border-top: 1px dashed var(--color-border);
+  padding-top: var(--spacing-lg);
+}
+
+/* Force Start on New Page */
+.new-page {
+  page-break-before: always;
+}
+
+/* ========================================
+   PRINT MEDIA OPTIMIZATION
+   ======================================== */
+
+@media print {
+  body {
+    color: #000;
+    background: white;
+  }
+  
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+  
+  /* Reduce contrast of light backgrounds for print */
+  code, pre, blockquote {
+    background-color: #f8f8f8;
+  }
+  
+  /* Remove unnecessary hover states */
+  tbody tr:hover {
+    background-color: var(--color-bg-row);
+  }
+}
+
+/* ========================================
+   STRIP UNNECESSARY SPACING
+   ======================================== */
+
+body > *:first-child {
+  margin-top: 0;
+}
+
+/* ========================================
+   THEME VARIANTS (uncomment to use)
+   ======================================== */
+
+/* Dark Mode Theme */
+/*
+:root.dark-mode {
+  --color-primary: #A855F7;
+  --color-text: #F5F5F5;
+  --color-bg: #1a1a1a;
+  --color-bg-light: #2d2d2d;
+  --color-bg-row: #252525;
+  --color-border: #444444;
+}
+*/
+
+/* Monochrome Theme */
+/*
+:root.monochrome {
+  --color-primary: #000000;
+  --color-accent: #666666;
+  --color-bg-label: #f0f0f0;
+}
+*/
