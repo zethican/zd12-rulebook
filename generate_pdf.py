@@ -264,11 +264,24 @@ def generate_pdf(html_file, output_file, **options):
                 running_headers=True
             )
             
-            # Inject the booklet CSS into the head
+            # Try to load the print-booklet-optimized.css for additional optimization
+            optimization_css = ""
+            try:
+                opt_css_path = Path(html_file).parent / 'css' / 'print-booklet-optimized.css'
+                if opt_css_path.exists():
+                    optimization_css = opt_css_path.read_text(encoding='utf-8')
+                    print(f"  ✓ Loaded optimized print styles from css/print-booklet-optimized.css")
+            except Exception as e:
+                print(f"  ⚠ Could not load print optimization CSS: {e}")
+            
+            # Combine both stylesheets
+            combined_css = booklet_css + "\n" + optimization_css
+            
+            # Inject the combined CSS into the head
             if '</head>' in html_content:
                 html_content = html_content.replace(
                     '</head>',
-                    f'<style>{booklet_css}</style>\n</head>'
+                    f'<style>{combined_css}</style>\n</head>'
                 )
         
         # Convert to absolute path for base_url

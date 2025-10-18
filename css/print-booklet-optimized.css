@@ -1,0 +1,409 @@
+/* ========================================
+   ZD12 PRINT OPTIMIZATION FOR BOOKLET
+   Optimized for WeasyPrint 5.5x8.5" booklet
+   Page breaks, widow/orphan control, tight spacing
+   ======================================== */
+
+/* AGGRESSIVE PAGE BREAK CONTROL */
+
+h1 {
+  page-break-before: always;
+  page-break-after: avoid;
+  margin-top: 0.3in;  /* Reduced from spacing-xl */
+  margin-bottom: 0.15in;
+}
+
+h1:first-of-type {
+  page-break-before: avoid;
+}
+
+h2 {
+  page-break-after: avoid;
+  margin-top: 0.2in;  /* Reduced */
+  margin-bottom: 0.1in;
+}
+
+h3 {
+  page-break-after: avoid;
+  margin-top: 0.15in;
+  margin-bottom: 0.08in;
+}
+
+h4 {
+  page-break-after: avoid;
+  margin-top: 0.1in;
+  margin-bottom: 0.05in;
+}
+
+h5, h6 {
+  page-break-after: avoid;
+}
+
+/* PARAGRAPH & TEXT COMPRESSION */
+
+p {
+  margin-bottom: 0.1in;  /* Reduced from 0.75em */
+  orphans: 3;  /* Aggressive: prevent single lines */
+  widows: 3;
+  line-height: 1.4;  /* Reduced from 1.6 */
+  break-inside: avoid;  /* Keep paragraphs together when possible */
+}
+
+/* Reduce space between short paragraphs */
+p + p {
+  margin-top: -0.05in;
+}
+
+/* LISTS - TIGHTEN UP */
+
+ul, ol {
+  margin: 0.1in 0 0.1in 1.2em;
+  padding-left: 0;
+  page-break-inside: avoid;
+}
+
+li {
+  margin-bottom: 0.03in;  /* Minimal spacing */
+  line-height: 1.35;
+}
+
+/* Prevent lists from breaking before content */
+li + li {
+  page-break-before: avoid;
+}
+
+/* TABLES - ABSOLUTE NO-BREAK RULE */
+
+table {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin: 0.15in 0;  /* Reduced */
+  font-size: 9pt;  /* Reduced from 10pt */
+  width: 100%;
+}
+
+thead {
+  display: table-header-group;  /* Repeat header on new page if needed */
+}
+
+tbody {
+  page-break-inside: avoid;
+}
+
+tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* Prevent word hyphenation in tables, increase header readability */
+th {
+  font-size: 9.5pt;
+  min-width: 3em;
+  padding: 0.1in 0.12in;
+  word-spacing: 0.05em;
+}
+
+td {
+  min-width: 2.5em;
+}
+
+th, td {
+  padding: 0.08in 0.1in;  /* Reduced from 0.75em */
+  line-height: 1.3;
+  vertical-align: top;
+  word-break: keep-all;      /* Prevent breaking words */
+  overflow-wrap: normal;      /* Let words wrap naturally, don't force break */
+  hyphens: none;             /* Disable hyphenation in tables */
+  white-space: normal;       /* Allow wrapping but not forced breaks */
+}
+
+/* BLOCKQUOTES & CODE BLOCKS */
+
+code, pre, blockquote, .example {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin: 0.1in 0;
+  padding: 0.1in 0.1in;
+  font-size: 9pt;
+  line-height: 1.3;
+}
+
+/* TYPOGRAPHY OPTIMIZATION */
+
+body {
+  font-size: 10.5pt;  /* Slightly reduced */
+  line-height: 1.4;
+}
+
+h1 {
+  font-size: 24pt;  /* Reduced from 28pt */
+  margin-bottom: 0.1in;
+}
+
+h2 {
+  font-size: 18pt;  /* Reduced from 20pt */
+  margin-bottom: 0.08in;
+}
+
+h3 {
+  font-size: 14.5pt;  /* Reduced from 16pt */
+  margin-bottom: 0.06in;
+}
+
+h4 {
+  font-size: 12pt;  /* Reduced from 13pt */
+  margin-bottom: 0.04in;
+}
+
+/* SPECIAL SECTION PROTECTION */
+
+#table-of-contents {
+  page-break-after: always;
+  page-break-inside: avoid;
+}
+
+/* Keep related content together */
+.section-block,
+[data-section] {
+  page-break-inside: avoid;
+}
+
+/* HORIZONTAL RULES */
+
+hr {
+  margin: 0.15in 0;  /* Reduced */
+  page-break-after: avoid;
+}
+
+/* INLINE ELEMENTS */
+
+strong, b {
+  font-weight: bold;
+}
+
+em, i {
+  font-style: italic;
+}
+
+sup {
+  font-size: 8pt;
+}
+
+/* STRIP UNNECESSARY SPACING */
+
+* + h1 {
+  margin-top: 0.25in;
+}
+
+* + h2 {
+  margin-top: 0.15in;
+}
+
+/* FORCED KEEPS FOR CONTENT BLOCKS */
+
+/* Keep chapter intro with chapter heading */
+h2 {
+  page-break-before: avoid;
+}
+
+h3 {
+  page-break-before: avoid;
+}
+
+/* Stat blocks stay together */
+.stats, .abilities, .rules-block {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin-bottom: 0.1in;
+}
+
+/* FOOTER & HEADER OPTIMIZATION */
+
+@page {
+  margin-top: 0.5in;
+  margin-bottom: 0.5in;
+  margin-left: 0.35in;
+  margin-right: 0.35in;
+}
+
+@page :first {
+  margin-top: 1in;
+  margin-bottom: 1in;
+}
+
+/* SPECIFIC PATTERN FIXES */
+
+/* Ensure tables don't orphan themselves from headers */
+h4 + table {
+  page-break-before: avoid;
+}
+
+h3 + table {
+  page-break-before: avoid;
+}
+
+/* Keep the first paragraph after a heading with the heading */
+h2 + p,
+h3 + p,
+h4 + p {
+  page-break-before: avoid;
+}
+
+/* PRINT-SPECIFIC OPTIMIZATIONS */
+
+@media print {
+  body {
+    color: #000;
+  }
+  
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+  
+  /* Reduce contrast of light backgrounds for print */
+  code, pre, blockquote {
+    background-color: #f8f8f8;
+  }
+}
+
+/* HYPHENATION & TEXT FLOW */
+
+body {
+  hyphens: auto;
+}
+
+/* Allow justified text in booklet for professional look */
+p, li {
+  text-align: justify;
+  text-align-last: left;
+}
+
+/* SECTION CLUSTERING */
+
+/* These CSS classes can be added to your HTML for explicit grouping */
+/* If not present in HTML, these serve as fallback best practices */
+
+/* Treat lists as atomic units */
+ul {
+  break-inside: avoid;
+}
+
+ol {
+  break-inside: avoid;
+}
+
+/* WIDOW/ORPHAN TUNING FOR TIGHT PAGES */
+
+body {
+  orphans: 3;
+  widows: 3;
+}
+
+/* Prevent single-line headings at bottom */
+h1, h2, h3, h4, h5, h6 {
+  orphans: 1;
+  widows: 1;
+}
+
+/* FINAL SPACING RESET */
+
+/* Remove top margin from first child in container */
+body > *:first-child {
+  margin-top: 0;
+}
+
+/* Collapse adjacent margins */
+* + h1 { margin-top: max(0.2in, var(--spacing-md)); }
+* + h2 { margin-top: max(0.12in, var(--spacing-md)); }
+* + p { margin-top: 0; }
+
+/* ========================================
+   HELPER CLASSES FOR PAGE/CONTENT CONTROL
+   ======================================== */
+
+/* Page Breaks */
+.page-break {
+  page-break-before: always;
+  page-break-after: avoid;
+}
+
+.page-break-before {
+  page-break-before: always;
+}
+
+.page-break-after {
+  page-break-after: always;
+}
+
+/* Keep Content Together */
+.no-break {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.keep-with-next {
+  margin-bottom: 0;
+}
+
+/* Content Boxes - Never Break */
+.box, .stat-block, .sidebar, .rules-box {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin: 0.15in 0;
+  padding: 0.1in 0.15in;
+  border-left: 3px solid #8C00FF;
+  background-color: #f9f9f9;
+}
+
+/* Decorative Separator (doesn't force page break) */
+.separator {
+  border: none;
+  border-top: 1px solid #8C00FF;
+  margin: 0.2in 0;
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+
+.separator-thick {
+  border: none;
+  border-top: 2px solid #8C00FF;
+  margin: 0.25in 0;
+  page-break-after: avoid;
+}
+
+/* Section Divider with spacing */
+.section-break {
+  margin: 0.3in 0;
+  page-break-after: avoid;
+  border-top: 1px dashed #dddddd;
+  padding-top: 0.1in;
+}
+
+/* Force Start on New Page */
+.new-page {
+  page-break-before: always;
+}
+
+/* Prevent break before this element */
+.no-break-before {
+  page-break-before: avoid;
+}
+
+/* Prevent break after this element */
+.no-break-after {
+  page-break-after: avoid;
+}
+
+/* Sticky together - use for groups of related items */
+.group, .related {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* For small content that should never orphan */
+.keep-tight {
+  page-break-inside: avoid;
+  orphans: 5;
+  widows: 5;
+}
