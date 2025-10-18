@@ -109,6 +109,16 @@
   }
 }
 
+@page :left {
+    @top-center { content: string(chapter-header); }
+    @bottom-left { content: counter(page); }  /* Outer edge */
+}
+
+@page :right {
+    @top-center { content: string(section-header); }
+    @bottom-right { content: counter(page); }  /* Outer edge */
+}
+
 /* ========================================
    BASE STYLES
    ======================================== */
@@ -151,7 +161,9 @@ h1 {
   padding-bottom: var(--spacing-xs);
   margin: 0 0 var(--spacing-lg) 0;
   margin-top: var(--spacing-xl);
-  page-break-before: always;
+  page-break-before: left;  /* WeasyPrint supports this! */
+  /* stylelint-disable-next-line property-no-unknown *
+  string-set: chapter-heading content(text); /* For future use with running headers */
 }
 
 h1:first-of-type {
@@ -163,6 +175,8 @@ h2 {
   color: var(--color-primary);
   margin-top: var(--spacing-xxl);
   margin-bottom: var(--spacing-md);
+  /* stylelint-disable-next-line property-no-unknown *
+  string-set: section-heading content(text); /* For future use with running headers */
 }
 
 h3 {
