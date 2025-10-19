@@ -1,30 +1,5 @@
-/* ========================================
-   BOOKLET LAYOUT PRESET
-   Uncomment this block for 5.5" x 8.5" booklet
-   ======================================== */
-/*
-:root {
-  --page-width: 5.5in;
-  --page-height: 8.5in;
-  --page-margin-top: 0.4in;
-  --page-margin-right: 0.3in;
-  --page-margin-bottom: 0.4in;
-  --page-margin-left: 0.3in;
-  
-  --content-width: 4.9in;   /* 5.5 - 0.6 */
-  --content-height: 7.7in;  /* 8.5 - 0.8 */
-  
-  /* Slightly smaller fonts for booklet */
-  --size-h1: 20pt;
-  --size-h2: 16pt;
-  --size-h3: 13pt;
-  --size-h4: 11pt;
-  --size-body: 9.5pt;
-  --size-table: 8.5pt;
-  --size-code: 8.5pt;
-  --size-header-footer: 8pt;
-}
-*/
+
+
 /* ========================================
    ZD12 CORE RULEBOOK - STYLESHEET v3.1
    OPTIMIZED FOR STABLE PAGE LAYOUT
@@ -35,7 +10,7 @@
 :root {
   
   /* Color Palette */
-  --color-primary: #8C00FF;      /* Purple */
+  --color-primary: #3e1b5b;      /* Purple */
   --color-accent: #FFC400;       /* Gold */
   --color-text: #000000;
   --color-text-light: #333333;   /* Dark gray */
@@ -44,12 +19,12 @@
   --color-bg-row: #f9f9f9;
   --color-bg-label: #FFF5E6;
   --color-border: #dddddd;
-  --color-border-dark: #8C00FF;
+  --color-border-dark: #5b1495;
   
   /* Typography */
   --font-heading: 'Playwrite DE Grund', cursive;
-  --font-body: 'Winky Rough', sans-serif;
-  --font-serif: 'Instrument Serif', serif;
+  --font-body: 'Instrument Serif', sans-serif;
+  --font-serif: 'Mozilla Text', serif;
   
   /* Sizes */
   --size-h1: 24pt;
@@ -81,7 +56,33 @@
   --content-width: 7.8in;  /* 8.5 - 0.7 */
   --content-height: 10in;   /* 11 - 1.0 */
 }
+/* ========================================
+   BOOKLET LAYOUT PRESET
+   Uncomment this block for 5.5" x 8.5" booklet
+   ======================================== */
 
+:root {
+  --page-width: 5.5in;
+  --page-height: 8.5in;
+  --page-margin-top: 0.4in;
+  --page-margin-right: 0.3in;
+  --page-margin-bottom: 0.4in;
+  --page-margin-left: 0.3in;
+  
+  --content-width: 4.9in;   /* 5.5 - 0.6 */
+  --content-height: 7.7in;  /* 8.5 - 0.8 */
+ /* 
+  /* Slightly smaller fonts for booklet */
+  --size-h1: 20pt;
+  --size-h2: 16pt;
+  --size-h3: 13pt;
+  --size-h4: 11pt;
+  --size-body: 9.5pt;
+  --size-table: 8.5pt;
+  --size-code: 8.5pt;
+  --size-header-footer: 8pt;
+*/
+}
 /* ========================================
    FONT DECLARATIONS
    ======================================== */
@@ -89,16 +90,23 @@
 
 
 @font-face {
-  font-family: 'Instrument Serif';
+  font-family: 'Mozilla Text';
   src: url('../fonts/Instrument_Serif.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('../fonts/Instrument Serif.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Instrument Serif';
-  src: url('../fonts/Instrument_Serif.ttf') format('truetype');
+  font-family: 'Mozilla Text';
+  src: url('../fonts/Mozilla_Text.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -137,11 +145,16 @@ h3, h4, h5 {
 
 /* Part/Major section breaks force LEFT-PAGE starts */
 h1 {
-  page-break-before: left;
+  page-break-before: always;
 }
 
 h1:first-of-type {
   page-break-before: avoid;
+}
+
+/* Chapter headings force LEFT-PAGE starts */
+h2.chapter {
+  page-break-before: left;
 }
 
 /* LEFT PAGES: Chapter on top-left, page number on outer edge */
@@ -225,11 +238,12 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  color: var(--color-text);
+  color: var(--color-primary);
   font-weight: normal;
   page-break-after: avoid;
   line-height: 1.3;
   font-kerning: auto;
+  text-align: left;
   text-rendering: geometricPrecision;
   orphans: 1;
   widows: 1;
@@ -256,7 +270,7 @@ h2 {
   margin-top: var(--spacing-xl);
   margin-bottom: var(--spacing-md);
   page-break-after: avoid;
-  page-break-before: avoid;
+  page-break-before: left;
 }
 
 h3 {
@@ -281,7 +295,7 @@ h5, h6 {
 }
 
 /* FIX #3: Keep headings with following content more aggressively */
-h2, h3, h4 {
+h2, h3, h4, h5 {
   keep-with-next: always; /* WeasyPrint specific */
 }
 
@@ -310,6 +324,7 @@ p + p {
 
 strong, b {
   font-weight: bold;
+  test-justify: left;
   color: var(--color-primary);
 }
 
@@ -339,24 +354,17 @@ a:hover {
 ul, ol {
   margin: var(--spacing-md) 0 var(--spacing-md) 1.2em;
   padding-left: 0;
-  /* CHANGED: Remove page-break-inside: avoid on lists */
-  /* This allows long lists to split across pages naturally */
 }
 
-/* But keep list items together */
+/* List items - allow natural breaking but keep items together */
 li {
   margin-bottom: var(--spacing-sm);
   line-height: 1.35;
-  page-break-inside: avoid; /* Individual items stay together */
 }
 
-li + li {
-  page-break-before: avoid;
-}
-
-/* Short lists (3 or fewer items) should stay together */
-ul:has(li:nth-child(-n+3):last-child),
-ol:has(li:nth-child(-n+3):last-child) {
+/* Only prevent breaking between list items if there are very few */
+ul:has(li:nth-child(-n+2):last-child),
+ol:has(li:nth-child(-n+2):last-child) {
   page-break-inside: avoid;
 }
 
@@ -403,8 +411,6 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin: var(--spacing-md) 0;
-  page-break-inside: avoid;
-  break-inside: avoid;
   font-size: var(--size-table);
   background-color: var(--color-bg);
 }
@@ -431,7 +437,7 @@ thead {
 
 th {
   padding: 0.08in 0.1in;
-  text-align: center;
+  text-align: left;
   border: 1px solid var(--color-border-dark);
   font-family: var(--font-heading);
   font-size: 9.5pt;
@@ -453,8 +459,7 @@ td {
 }
 
 tbody {
-  page-break-inside: avoid;
-  break-inside: avoid;
+  display: table-row-group;
 }
 
 tr {
@@ -501,9 +506,9 @@ hr {
 }
 
 p:has(strong:only-child) {
-  text-align: center;
+  text-align: left;
   margin-top: var(--spacing-xxl);
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   font-style: italic;
 }
 
